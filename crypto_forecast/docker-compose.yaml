@@ -36,3 +36,7 @@ networks:
 
 volumes:
   crypto_volumn:
+
+
+# compose 파일 실행
+# $ docker-compose up --build
