@@ -22,9 +22,11 @@ def inquire_candle_data(market, tgt_date, unit, time_unit=1, max_per_attmp=180, 
         response = requests.get(URL, params=PARAMS)
         response.raise_for_status()
         
+        print(f"✅ UpBit 데이터 요청 성공 | ~ {tgt_date}")
+        
         return response.json()
 
     except requests.exceptions.RequestException as e:  
-        LOGGER.error(f"Error Fetching Data from UpBit : {e}")
+        print(f"🚨 UpBit 데이터 요청 실패 | 에러: {e}")
         
         return None

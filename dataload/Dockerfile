@@ -1,7 +1,11 @@
-FROM demisto/pandas:1.0.0.2067380
+FROM python:3.10
 
 WORKDIR /app
 
-COPY . /app/
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app
 
 CMD ["python", "run.py"]
+

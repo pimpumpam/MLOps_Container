@@ -1,49 +1,71 @@
-import sys
+import os
 import time
-import sqlite3
+import argparse
 import pandas as pd
 from datetime import datetime, timedelta
 
-from src.data_loader import inquire_candle_data
-from src.table_manager import fetch_one
-from src.query_manager import is_exists, get_recent_timestamp, dataframe_to_tale
+from src.loader import inquire_candle_data
+from src.database import connect_to_engine, fetch_one
+from src.query import is_exists, get_recent_timestamp, dataframe_to_tale
+from utils.utils import load_spec_from_config
 
-from config import CfgSqlite, CfgLoader
+
+# globals
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = int(os.getenv("DB_PORT"))
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+
 
 class Loader:
-    
-    def __init__(self, cfg_sqlite, cfg_loader):
+    def __init__(self, cfg_database, cfg_loader):
         
-        self.cfg_sqlite = cfg_sqlite
         self.cfg_loader = cfg_loader
+        self.cfg_database = cfg_database
         
-        self.conn = sqlite3.connect(cfg_sqlite.db_path)
-        self.cursor = self.conn.cursor()
+        self.engine = connect_to_engine(
+            host=DB_HOST,
+            port=DB_PORT,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME
+        )
+        self.conn = self.engine.connect()
+        self.cursor = self.engine.raw_connection().cursor()
         
-        
+                
     def run(self):
+        exists = fetch_one(
+            cursor=self.cursor,
+            query=is_exists(
+                database_name=DB_NAME, 
+                table_name=f"{self.cfg_database.scheme}_{self.cfg_database.table}"
+            )
+        )
         
-        if bool(
-            fetch_one(cursor=self.cursor, query=is_exists(self.cfg_sqlite.brz_table))
-        ):
+        if bool(exists[0]):
             latest_time = fetch_one(
                 cursor=self.cursor,
-                query=get_recent_timestamp(self.cfg_sqlite.brz_table)
+                query=get_recent_timestamp(table_name=f"{self.cfg_database.scheme}_{self.cfg_database.table}")
             )[0]
             
             tic = datetime.strptime(latest_time, "%Y-%m-%dT%H:%M:%S") + timedelta(minutes=1)
-#             toc = datetime.now()
             toc = tic + timedelta(days=1)
+            
+            print("📢 DB 내 테이블 존재")
+            print(f"⏱️ 데이터 요청 시간 범위: {tic} ~ {toc}")
             
         else:
             tic = datetime.strptime(self.cfg_loader.tic, "%Y-%m-%dT%H:%M:%S")
-#             toc = datetime.now()
             toc = datetime.strptime(self.cfg_loader.toc, "%Y-%m-%dT%H:%M:%S")
+            
+            print("📢 DB 내 테이블 없음")
+            print(f"⏱️ 데이터 요청 시간 범위: {tic} ~ {toc}")
             
         
         data = []
         while True:
-             
             if tic > toc:
                 break
                 
@@ -53,8 +75,7 @@ class Loader:
                 unit=self.cfg_loader.unit,
                 time_unit=self.cfg_loader.time_unit,
                 max_per_attmp=self.cfg_loader.max_per_attmp
-            )
-                
+            )  
             data.extend(datum)
             
             toc = datetime.strptime(
@@ -64,19 +85,25 @@ class Loader:
             toc -= timedelta(seconds=1)
 
             time.sleep(0.1)
-                
         
-        data = pd.DataFrame(data)
-        data.drop_duplicates(inplace=True)
-        
+        data = pd.DataFrame(data).drop_duplicates()
+            
         dataframe_to_tale(
-            table_name=self.cfg_sqlite.brz_table,
+            table_name=f"{self.cfg_database.scheme}_{self.cfg_database.table}",
             data=data,
             conn=self.conn
         )
         
-        
 if __name__ == "__main__":
-        
-    loader = Loader(CfgSqlite, CfgLoader)
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=str, default="gru", help="Config Python 파일 명. 확장자 제외.")
+    args = parser.parse_args() 
+    
+    (
+        cfg_database,
+        cfg_loader
+    ) = load_spec_from_config(args.config)
+    
+    loader = Loader(cfg_database, cfg_loader)
     loader.run()

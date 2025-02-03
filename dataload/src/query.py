@@ -1,11 +1,18 @@
-def is_exists(table_name):
+def is_exists(database_name, table_name):
     
-    return f"SELECT 1 FROM sqlite_master WHERE type='table' and name='{table_name}'" 
+    return f"""
+            SELECT COUNT(*) 
+            FROM INFORMATION_SCHEMA.TABLES 
+            WHERE 1=1
+                AND TABLE_SCHEMA = '{database_name}' 
+                AND TABLE_NAME = '{table_name}'
+            ;
+            """
 
 
 def get_recent_timestamp(table_name, **kwargs):
             
-    time_col = kwargs['time_col'] if 'time_col' in kwargs else 'KST_TIME'
+    time_col = kwargs['time_col'] if 'time_col' in kwargs else 'candle_date_time_utc'    
     
     return f"SELECT max({time_col}) FROM {table_name}"
 
