@@ -1,4 +1,4 @@
-# Data Load
+# Data Preprocess
 FROM python:3.9-slim
 
 WORKDIR /app
@@ -17,7 +17,8 @@ ENV DB_NAME=crypto_currency
 CMD ["python", "run.py"]
 
 # 이미지 빌드
-# $ docker build -t dataload_image .
+# $ docker build -t crypto_preprocess_image .
 
 # 컨테이너 실행
-# $ docker run -d --name dataload --link crypto_database:mysql dataload_image
+# $ docker run -d --name crypto_preprocess --link crypto_database:mysql crypto_preprocess_image
+

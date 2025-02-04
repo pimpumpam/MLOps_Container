@@ -25,7 +25,7 @@ def amount_of_change_price(data, time_col, feature_cols, unit='day', time_freq=1
     
     # calculate difference
     for col in feature_cols:    
-        data[f'DIFF_{col}'] = data[col] - prev[col]
+        data[f'diff_{col}'] = data[col] - prev[col]
 
     return data
 
@@ -52,6 +52,6 @@ def amount_of_change_rate(data, time_col, feature_cols, unit='day', time_freq=1)
     
     # calculate difference
     for col in feature_cols:    
-        data[f'RATIO_{col}'] = data[col] / prev[col]
+        data[f'ratio_{col}'] = data[col] / prev[col]
 
     return data

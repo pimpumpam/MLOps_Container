@@ -3,12 +3,9 @@ import argparse
 import pandas as pd
 
 from src.query import dataframe_to_tale
-from src.database import connect_to_engine, fetch_one
+from src.database import connect_to_engine
 from src.preprocessing import validate_missing_values, validate_missing_timestamp, validate_duplicate_values, fill_time_gaps, fill_missing_values
 from src.feature_engineering import amount_of_change_price, amount_of_change_rate
-from src.transformation import MultiColumnScaler
-from src.preparation import split_train_test
-
 from utils.utils import load_spec_from_config
 
 
@@ -21,6 +18,7 @@ DB_NAME = os.getenv("DB_NAME")
 
 
 class Preprocessor:
+    
     def __init__(self, cfg_database, cfg_preprocessor):
         self.cfg_database = cfg_database
         self.cfg_preprocessor = cfg_preprocessor
@@ -36,8 +34,10 @@ class Preprocessor:
         self.cursor = self.engine.raw_connection().cursor()
     
     def run(self):
+        print("🏃🏻Python 파일 실행")
         
         # 데이터 불러오기
+        print("🧐 DB 내 데이터 조회")
         query = f"""
         		SELECT 
           			market,
@@ -48,8 +48,10 @@ class Preprocessor:
 					high_price,
 					candle_acc_trade_price,
 					candle_acc_trade_volume
-             	FROM {self.cfg_database.layer['bronze']['scheme']}_{self.cfg_database.layer['bronze']['table']};"""
+             	FROM {self.cfg_database.layer['bronze']['scheme']}_{self.cfg_database.layer['bronze']['table']};
+                """
         candle_data = pd.read_sql(query, con=self.engine)
+        
         
         # 누락된 시간 정보 검증
         if not validate_missing_timestamp(candle_data, time_col='candle_date_time_kst'):
@@ -73,6 +75,7 @@ class Preprocessor:
         else:
             print("👌 데이터 무결. 누락 된 Timestamp 발견 안됨.")
             
+            
         # 누락값 검증
         if not validate_missing_values(candle_data):
             print("⚠️ 데이터 내 1개 이상의 누락된 값 존재.")
@@ -85,6 +88,7 @@ class Preprocessor:
         else:
             print("👌 데이터 무결. 누락 값 발견 안됨.")
             
+            
         # 중복값 검증
         if not validate_duplicate_values(candle_data):
             print("⚠️ 데이터 내 1개 이상의 중복 된 attribute 존재.")
@@ -95,6 +99,7 @@ class Preprocessor:
             
         else:
             print("👌 데이터 무결. 중복 attribute 발견 안됨.")
+            
             
         # 파생 변수 생성
         print("🛠️ 파생 변수 생성")
@@ -113,14 +118,17 @@ class Preprocessor:
 			unit='day',
 			time_freq=1
 		)
-            
+        
+        
+        # 데이터 적재
         print("📦 전처리 데이터 DB 적재")
         dataframe_to_tale(
 			table_name=f"{self.cfg_database.layer['silver']['scheme']}_{self.cfg_database.layer['silver']['table']}",
 			data=candle_data,
 			conn=self.conn
 		)
-            
+
+
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()

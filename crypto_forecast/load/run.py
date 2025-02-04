@@ -36,6 +36,8 @@ class Loader:
         
                 
     def run(self):
+        print("🏃🏻Python 파일 실행")
+        
         exists = fetch_one(
             cursor=self.cursor,
             query=is_exists(

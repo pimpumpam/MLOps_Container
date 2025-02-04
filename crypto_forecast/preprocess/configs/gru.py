@@ -7,10 +7,6 @@ class CfgDatabase:
         'silver': {
             'scheme': 'dw_slv',
             'table': 'crypto_transc_candle_upbit_minutes'
-        },
-        'gold': {
-            'scheme':'dw_gld',
-            'table': 'crypto_transc_candle_upbit_minutes'
         }
     }
     
