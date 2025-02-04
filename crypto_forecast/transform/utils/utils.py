@@ -1,5 +1,6 @@
 from typing import Sequence, cast
 
+
 def load_spec_from_config(cfg_name):
      
     database_spec = __import__(
