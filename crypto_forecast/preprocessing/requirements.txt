@@ -1,0 +1,6 @@
+pandas
+pymysql
+sqlalchemy
+cryptography
+mysql-connector-python
+scikit-learn

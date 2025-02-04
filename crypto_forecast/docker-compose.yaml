@@ -15,7 +15,7 @@ services:
     networks:
       - crypto_network
     volumes:
-      - crypto_volumn:/var/lib/mysql
+      - crypto_volume:/var/lib/mysql
 
   dataload:
     build: ./dataload
@@ -35,7 +35,7 @@ networks:
   crypto_network:
 
 volumes:
-  crypto_volumn:
+  crypto_volume:
 
 
 # compose 파일 실행

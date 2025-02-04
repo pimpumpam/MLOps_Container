@@ -1,6 +1,10 @@
 class CfgDatabase:
-    scheme = "dw_brz"
-    table = "crypto_transc_candle_upbit_minutes"
+    layer = {
+        'bronze': {
+            'scheme': 'dw_brz',
+            'table': 'crypto_transc_candle_upbit_minutes'
+        }
+    }
 
 class CfgLoader:
     platform = "upbit"

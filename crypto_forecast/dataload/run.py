@@ -40,14 +40,14 @@ class Loader:
             cursor=self.cursor,
             query=is_exists(
                 database_name=DB_NAME, 
-                table_name=f"{self.cfg_database.scheme}_{self.cfg_database.table}"
+                table_name=f"{self.cfg_database.layer['bronze']['scheme']}_{self.cfg_database.layer['bronze']['table']}"
             )
         )
         
         if bool(exists[0]):
             latest_time = fetch_one(
                 cursor=self.cursor,
-                query=get_recent_timestamp(table_name=f"{self.cfg_database.scheme}_{self.cfg_database.table}")
+                query=get_recent_timestamp(table_name=f"{self.cfg_database.layer['bronze']['scheme']}_{self.cfg_database.layer['bronze']['table']}")
             )[0]
             
             tic = datetime.strptime(latest_time, "%Y-%m-%dT%H:%M:%S") + timedelta(minutes=1)
@@ -89,7 +89,7 @@ class Loader:
         data = pd.DataFrame(data).drop_duplicates()
             
         dataframe_to_tale(
-            table_name=f"{self.cfg_database.scheme}_{self.cfg_database.table}",
+            table_name=f"{self.cfg_database.layer['bronze']['scheme']}_{self.cfg_database.layer['bronze']['table']}",
             data=data,
             conn=self.conn
         )
