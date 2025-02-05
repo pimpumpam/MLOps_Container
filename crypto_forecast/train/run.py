@@ -101,6 +101,7 @@ class Trainer:
                         mlflow.pytorch.log_model(
                             pytorch_model=model,
                             artifact_path='model',
+                            code_paths=['./src/models'],
                             signature=infer_signature(X[0], y[0])
                         )
                         
@@ -118,19 +119,20 @@ class Trainer:
                     time_col=self.cfg_train.time_field
                 )
                 
-                train(
-                    dataset=(X, y),
-                    model=model,
-                    batch_size=hyp['batch_size'],
-                    num_epochs=hyp['num_epoch'],
-                    learning_rate=hyp['learning_rate'],
-                    device='cpu'
-                )
+                # train(
+                #     dataset=(X, y),
+                #     model=model,
+                #     batch_size=hyp['batch_size'],
+                #     num_epochs=hyp['num_epoch'],
+                #     learning_rate=hyp['learning_rate'],
+                #     device='cpu'
+                # )
                 
                 mlflow.log_params(hyp)
                 mlflow.pytorch.log_model(
                     pytorch_model=model,
                     artifact_path='model',
+                    code_paths=['src'],
                     signature=infer_signature(X[0], y[0])
                 )
                 

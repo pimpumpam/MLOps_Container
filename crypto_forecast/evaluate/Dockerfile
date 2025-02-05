@@ -1,4 +1,4 @@
-# Model Training
+# Model Evaluate
 FROM pytorch/pytorch
 
 RUN apt-get update && apt-get install -y git
@@ -19,7 +19,7 @@ ENV DB_NAME=crypto_currency
 CMD ["python", "run.py"]
 
 # 이미지 빌드
-# $ docker build -t crypto_train_image .
+# $ docker build -t crypto_evaluate_image .
 
 # 컨테이너 실행
-# $ docker run -it --name crypto_train -v static_volume:/app/static -v mlflow_volume:/app/mlruns --network crypto_network crypto_train_image
+# $ docker run -it --name crypto_evaluate -v static_volume:/app/static -v mlflow_volume:/app/mlruns --network crypto_network crypto_evaluate_image

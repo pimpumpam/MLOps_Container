@@ -1,6 +1,8 @@
 # MLFlow Server
 FROM python:3.9
 
+RUN apt-get update && apt-get install -y git
+
 WORKDIR /app
 
 COPY requirements.txt .
@@ -20,4 +22,4 @@ CMD ["mlflow", "server", "--backend-store-uri", "sqlite:////app/mlflow.db", "--d
 # $ docker build -t mlflow_image .
 
 # 컨테이너 실행
-# docker run -d --name mlflow --network crypto_network -p 8081:8081 mlflow_image
+# docker run -d --name mlflow --network crypto_network -p 8081:8081 -v mlflow_volume:/app/mlruns mlflow_image
