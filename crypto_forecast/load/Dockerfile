@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-ENV DB_HOST=mysql
+ENV DB_HOST=crypto_database
 ENV DB_PORT=3306
 ENV DB_USER=pimpumpam
 ENV DB_PASSWORD=kwsxfk8332
@@ -20,4 +20,4 @@ CMD ["python", "run.py"]
 # $ docker build -t crypto_load_image .
 
 # 컨테이너 실행
-# $ docker run -d --name crypto_load --link crypto_database:mysql crypto_load_image
+# $ docker run -d --name crypto_load --network crypto_network crypto_load_image

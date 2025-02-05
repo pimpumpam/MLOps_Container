@@ -16,4 +16,4 @@ CMD ["mysqld"]
 # $ docker build -t crypto_database_image .
 
 # 컨테이너 실행
-# $ docker run -d --name crypto_database -p 3306:3306 crypto_database_image
+# $ docker run -d --name crypto_database --network crypto_network -p 3306:3306 crypto_database_image
