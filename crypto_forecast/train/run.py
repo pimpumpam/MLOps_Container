@@ -9,7 +9,7 @@ from mlflow.models.signature import infer_signature
 
 from src.database import connect_to_engine
 from src.preparation import split_sliding_window
-from src.models.model import Model
+from models.model import Model
 from src.train import train
 from utils.utils import load_spec_from_config, setup_experiment, hyperparameter_combination
 
@@ -132,7 +132,7 @@ class Trainer:
                 mlflow.pytorch.log_model(
                     pytorch_model=model,
                     artifact_path='model',
-                    code_paths=['src'],
+                    code_paths=['models'],
                     signature=infer_signature(X[0], y[0])
                 )
                 

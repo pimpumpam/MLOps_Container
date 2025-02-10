@@ -1,7 +1,7 @@
 import torch.nn as nn
 
-from src.models.rnn import GRULayer
-from src.models.linear import LinearLayer
+from models.rnn import GRULayer
+from models.linear import LinearLayer
 
 
 class Model(nn.Module):

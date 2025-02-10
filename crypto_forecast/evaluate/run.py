@@ -20,31 +20,21 @@ DB_NAME = os.getenv("DB_NAME")
 mlflow.set_tracking_uri(uri="http://mlflow:8081")
 print("🚨🚨🚨🚨🚨🚨")
 artifacts_dir = '/app/mlruns' # --> CfgMeta.artifacts_dir
-RUN_ID = "f2df83e3022048a6884e237d5d63eee1"
-# MODEL_URI = os.path.join(artifacts_dir, RUN_ID, 'artifacts', 'model')
+RUN_ID = "874931f1016141059b81e29ec2635e4e"
 MODEL_URI = f"runs:/{RUN_ID}/model"
 MODEL_DIR = mlflow.artifacts.download_artifacts(MODEL_URI)
 CODE_DIR = os.path.join(MODEL_DIR, "code")
-
-print(MODEL_DIR)
-print(CODE_DIR)
 
 if os.path.exists(CODE_DIR):
     print(f"Append Code Path on System: {CODE_DIR}")
     import sys
     sys.path.append(CODE_DIR)
-    from src.models.model import Model
+    from models.model import Model
     print(f"Load Model Package")
 
 model = mlflow.pytorch.load_model(MODEL_URI)
 print(model)
 print("🚨🚨🚨🚨🚨🚨")
-
-import sys
-sys.exit()
-
-
-
 
 
 class Evaluator:
