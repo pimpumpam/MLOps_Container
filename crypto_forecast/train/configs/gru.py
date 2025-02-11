@@ -40,7 +40,7 @@ class CfgModel:
     
 class CfgHyperparameter:
     num_epoch = [1]
-    learning_rate = [0.05]
+    learning_rate = [0.05, 0.07]
     batch_size = [100]
     input_seq_len = [120]
     predict_seq_len = [60]

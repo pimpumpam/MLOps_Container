@@ -97,11 +97,12 @@ class Trainer:
                             device='cpu'
                         )
                         
+                        print("📝 메타정보 및 아티팩트 기록")
                         mlflow.log_params(hyp)
                         mlflow.pytorch.log_model(
                             pytorch_model=model,
                             artifact_path='model',
-                            code_paths=['./src/models'],
+                            code_paths=['models'],
                             signature=infer_signature(X[0], y[0])
                         )
                         
@@ -128,6 +129,7 @@ class Trainer:
                 #     device='cpu'
                 # )
                 
+                print("📝 메타정보 및 아티팩트 기록")
                 mlflow.log_params(hyp)
                 mlflow.pytorch.log_model(
                     pytorch_model=model,

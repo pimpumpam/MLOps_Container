@@ -3,15 +3,18 @@ import sys
 import json
 import pickle
 import argparse
-import mlflow.artifacts
+import numpy as np
 import pandas as pd
 
 import mlflow
+import mlflow.artifacts
 
 from src.database import connect_to_engine
 from src.preparation import split_sliding_window
 from src.transformation import MultiColumnScaler
+from src.evaluate import evaluate
 from utils.utils import load_spec_from_config
+from utils.metrics import root_mean_square_error, mean_absolute_error, mean_absolute_percentage_error
 
 # globals
 DB_HOST = os.getenv("DB_HOST")
@@ -84,14 +87,43 @@ class Evaluator:
                 X, y = split_sliding_window(
                     data=test_dataset,
                     feature_col=self.cfg_evaluate.feature_field,
-                    input_seq_len=hyp['input_seq_len'],
-                    label_seq_len=hyp['predict_seq_len'],
+                    input_seq_len=int(hyp['input_seq_len']),
+                    label_seq_len=int(hyp['predict_seq_len']),
                     time_col=self.cfg_evaluate.time_field
                 )
                 
-                # src.evaluate 부분부터 작성
+                pred, truth = evaluate(
+                    dataset=(X, y),
+                    model=model,
+                    batch_size=int(hyp['batch_size']),
+                    device='cpu'
+                )
                 
-                sys.exit()
+                print("🔄 Scale 역변환 수행")
+                pred = np.array(pred).reshape(-1, len(self.cfg_evaluate.label_field))
+                truth = np.array(truth).reshape(-1, len(self.cfg_evaluate.label_field))
+                
+                pred = pd.DataFrame(pred, columns=self.cfg_evaluate.label_field)
+                truth = pd.DataFrame(truth, columns=self.cfg_evaluate.label_field)
+                
+                scaler.inverse_transform(
+                    data=pred,
+                    columns=self.cfg_evaluate.label_field,
+                    inplace=True
+                )
+                
+                scaler.inverse_transform(
+                    data=truth,
+                    columns=self.cfg_evaluate.label_field,
+                    inplace=True
+                )
+                
+                print("📝 평가지표 기록")
+                mlflow.log_metrics({
+                    'RMSE': root_mean_square_error(pred, truth),
+                    'MAE': mean_absolute_error(pred, truth),
+                    'MAPE': mean_absolute_percentage_error(pred, truth) 
+                })
 
 
 if __name__ == "__main__":
