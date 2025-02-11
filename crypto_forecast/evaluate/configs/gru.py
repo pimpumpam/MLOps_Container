@@ -11,7 +11,16 @@ class CfgDatabase:
             'table': 'crypto_transc_candle_upbit_minutes_test'
         }
     }
-    
+
+
+class CfgTransform:
+    scaler = {
+        'name': 'MinMaxScaler',
+        'save_dir': '/app/static',
+        'save_name': 'crypto_scaler'
+    }
+
+
 class CfgModel:
     name = 'GRU'
     input_feature_dims = 18
@@ -35,6 +44,7 @@ class CfgModel:
             ['nn.Linear', [1000, 240]]
         ]
     }
+
 
 class CfgEvaluate:
     time_field = 'candle_date_time_kst'
