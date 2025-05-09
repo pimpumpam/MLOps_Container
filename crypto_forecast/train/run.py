@@ -70,7 +70,7 @@ class Trainer:
 
         # 모델 학습
         print(f"🧑🏻‍🏫 {self.cfg_model.name} 모델 학습")
-        with mlflow.start_run(run_name=self.cfg_model.name) as run:
+        with mlflow.start_run(run_name=self.cfg_model.name) as run: # parent_run
             
             if len(hyp_list)>1:
                 print("🕵🏻‍♂️ 하이퍼파라미터 최적화 수행")
