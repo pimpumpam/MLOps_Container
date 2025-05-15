@@ -1,1 +1,1 @@
-CREATE DATABASE mlflow_meta;
+CREATE DATABASE mlflow_db;

@@ -166,6 +166,7 @@ services:
         condition:
           service_completed_successfully
 
+
 # AIRFLOW
   airflow-init:
     <<: *airflow-common
@@ -255,7 +256,7 @@ services:
       always
 
 
-# AIRFLOW EXPORTER
+# AIRFLOW STATSD EXPORTER
   airflow-statsd-exporter:
     image: prom/statsd-exporter
     command: "--statsd.listen-udp=:8125 --web.listen-address=:9102 --statsd.mapping-config=/config/statsd.conf"
@@ -288,6 +289,7 @@ services:
 
 
 # GRAFANA
+# 초기 계정 정보 - ID: admin / PW: admin
   grafana:
     image: grafana/grafana
     healthcheck:
@@ -342,7 +344,7 @@ services:
         mc config host add mlflowminio http://minio:9000 lazyplum kwsxfk8332 &&
         mc mb --ignore-existing mlflowminio/mlflow
         mlflow server \
-        --backend-store-uri postgresql://lazyplum:kwsxfk8332@postgres/mlflow_meta \
+        --backend-store-uri postgresql://lazyplum:kwsxfk8332@postgres/mlflow_db \
         --default-artifact-root s3://mlflow/ \
         --host 0.0.0.0
     depends_on:
@@ -353,6 +355,11 @@ services:
     ports:
       - 5001:5000
     restart: always
+
+
+# compose 파일 실행
+# $ docker-compose up -d
+
 
 
   # mysql:
@@ -393,5 +400,3 @@ services:
 #   crypto_volume:
 
 
-# compose 파일 실행
-# $ docker-compose up --build
