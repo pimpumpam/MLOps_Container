@@ -9,11 +9,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install -U pip && \
-    pip install --no-cache-dir -r requirements.txt 
+    pip install mlflow psycopg2-binary boto3
 
-RUN curl -O https://dl.min.io/client/mc/release/linux-amd64/mc && \
+RUN cd /tmp && \
+    wget https://dl.min.io/client/mc/release/linux-amd64/mc && \
     chmod +x mc && \
-    mv mc /usr/local/bin/mc
+    mv mc /usr/bin/mc
 
 # Dockerfile로 이미지와 컨테이너 띄울 때 아래 설정 값 사용
 # FROM python:3.9

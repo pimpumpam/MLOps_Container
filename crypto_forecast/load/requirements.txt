@@ -3,4 +3,5 @@ pymysql
 requests
 sqlalchemy
 cryptography
+psycopg2-binary
 mysql-connector-python

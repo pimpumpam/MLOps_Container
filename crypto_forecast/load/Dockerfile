@@ -8,11 +8,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-ENV DB_HOST=crypto_database
-ENV DB_PORT=3306
-ENV DB_USER=pimpumpam
+ENV DB_HOST=postgres
+ENV DB_PORT=5432
+ENV DB_USER=lazyplum
 ENV DB_PASSWORD=kwsxfk8332
-ENV DB_NAME=crypto_currency
+ENV DB_NAME=crypto_forecast
 
 CMD ["python", "run.py"]
 

@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 from src.loader import inquire_candle_data
-from src.database import connect_to_engine, fetch_one
+from src.database import create_db_engine, fetch_one
 from src.query import is_exists, get_recent_timestamp, dataframe_to_tale
 from utils.utils import load_spec_from_config
 
@@ -24,7 +24,7 @@ class Loader:
         self.cfg_loader = cfg_loader
         self.cfg_database = cfg_database
         
-        self.engine = connect_to_engine(
+        self.engine = create_db_engine(
             host=DB_HOST,
             port=DB_PORT,
             user=DB_USER,
