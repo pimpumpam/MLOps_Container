@@ -4,7 +4,7 @@
 
 1. **Airflow**
     - Workflow 실행 및 관리
-    - 컨테이너 생성 후 MinIO Client 설정 필요 `$ bash ./bash/set_mc_in_airflow_worker.sh`, `$ bash ./bash/set_minio_in_airflow_worker.sh`
+    - 컨테이너 생성 후 MinIO Client 설정 필요.<br>`$ bash ./bash/set_mc_in_airflow_worker.sh`, `$ bash ./bash/set_minio_in_airflow_worker.sh`
     
 2. **MLFlow**
 
