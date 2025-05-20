@@ -1,6 +1,5 @@
 # MLOps_Container
 
-<img src="img/sys_archi.png" alt='아키텍처' witdh="100%">
 <img src="img/sys_archi.jpg" alt='아키텍처' witdh="100%">
 
 ## Docker Compose
