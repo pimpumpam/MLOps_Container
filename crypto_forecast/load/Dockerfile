@@ -20,4 +20,4 @@ CMD ["python", "run.py"]
 # $ docker build -t crypto_load_image .
 
 # 컨테이너 실행
-# $ docker run -d --name crypto_load --network crypto_network crypto_load_image
+# $ docker run -d --name crypto_load --network crypto_forecast_crypto_network crypto_load_image

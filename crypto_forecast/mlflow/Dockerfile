@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install -U pip && \
-    pip install mlflow psycopg2-binary boto3
+    pip install --no-cache-dir -r requirements.txt
+    # pip install mlflow psycopg2-binary boto3
 
 RUN cd /tmp && \
     wget https://dl.min.io/client/mc/release/linux-amd64/mc && \

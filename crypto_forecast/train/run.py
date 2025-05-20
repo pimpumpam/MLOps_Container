@@ -7,7 +7,7 @@ import pandas as pd
 import mlflow
 from mlflow.models.signature import infer_signature
 
-from src.database import connect_to_engine
+from src.database import create_db_engine
 from src.preparation import split_sliding_window
 from models.model import Model
 from src.train import train
@@ -27,7 +27,7 @@ class Trainer:
     
     def __init__(self, cfg_meta, cfg_database, cfg_model, cfg_hyperparameter, cfg_train):
         
-        mlflow.set_tracking_uri(uri="http://mlflow:8081")
+        mlflow.set_tracking_uri(uri="http://mlflow-server:5000")
         
         self.cfg_meta = cfg_meta
         self.cfg_database = cfg_database
@@ -35,7 +35,7 @@ class Trainer:
         self.cfg_hyperparameter = cfg_hyperparameter
         self.cfg_train = cfg_train
         
-        self.engine = connect_to_engine(
+        self.engine = create_db_engine(
             host=DB_HOST,
             port=DB_PORT,
             user=DB_USER,
@@ -158,5 +158,7 @@ if __name__ == "__main__":
         cfg_train
     ) = load_spec_from_config(args.config)
     
+    print(f"🐳 컨테이너 실행")
     trainer = Trainer(cfg_meta, cfg_database, cfg_model, cfg_hyp, cfg_train)
     trainer.run()
+    print(f"🐳 컨테이너 종료")

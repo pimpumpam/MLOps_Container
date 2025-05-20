@@ -9,7 +9,7 @@ import pandas as pd
 import mlflow
 import mlflow.artifacts
 
-from src.database import connect_to_engine
+from src.database import create_db_engine
 from src.preparation import split_sliding_window
 from src.transformation import MultiColumnScaler
 from src.evaluate import evaluate
@@ -28,7 +28,7 @@ class Evaluator:
     
     def __init__(self, cfg_meta, cfg_database, cfg_transform, cfg_model, cfg_evaluate):
         
-        mlflow.set_tracking_uri(uri="http://mlflow:8081")
+        mlflow.set_tracking_uri(uri="http://mlflow-server:5000")
         
         self.cfg_meta = cfg_meta
         self.cfg_database = cfg_database
@@ -36,7 +36,7 @@ class Evaluator:
         self.cfg_model = cfg_model
         self.cfg_evaluate = cfg_evaluate
         
-        self.engine = connect_to_engine(
+        self.engine = create_db_engine(
             host=DB_HOST,
             port=DB_PORT,
             user=DB_USER,
@@ -140,5 +140,7 @@ if __name__ == "__main__":
         evaluate_spec
     ) = load_spec_from_config(args.config)
     
+    print(f"🐳 컨테이너 실행")
     evaluator = Evaluator(meta_spec, database_spec, transform_spec, model_spec, evaluate_spec)
     evaluator.run()
+    print(f"🐳 컨테이너 종료")

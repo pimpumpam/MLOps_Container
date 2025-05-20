@@ -3,7 +3,7 @@ import argparse
 import pandas as pd
 
 from src.query import dataframe_to_tale
-from src.database import connect_to_engine
+from src.database import create_db_engine
 from src.transformation import MultiColumnScaler
 from src.preparation import split_train_test
 from utils.utils import load_spec_from_config
@@ -22,7 +22,7 @@ class Transformer:
         self.cfg_database = cfg_database
         self.cfg_transformer = cfg_transformer
         
-        self.engine = connect_to_engine(
+        self.engine = create_db_engine(
             host=DB_HOST,
             port=DB_PORT,
             user=DB_USER,

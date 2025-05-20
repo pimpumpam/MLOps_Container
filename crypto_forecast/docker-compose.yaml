@@ -67,6 +67,8 @@ services:
       timeout: 5s
       retries: 1
       start_period: 5s
+    networks:
+      - crypto_network
     
 
 # REDIS
@@ -82,6 +84,8 @@ services:
       start_period: 30s
     restart:
       always
+    networks:
+      - crypto_network
 
 
 # AIRFLOW WEBSERVER
@@ -101,6 +105,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - crypto_network
 
 
 # AIRFLOW SCHEDULER
@@ -120,6 +126,8 @@ services:
           service_completed_successfully
     restart:
       always
+    networks:
+      - crypto_network
     
 
 # AIRFLOW WORKER
@@ -146,6 +154,8 @@ services:
           service_completed_successfully
     restart:
       always
+    networks:
+      - crypto_network
 
 
 # AIRFLOW TRIGGERER
@@ -165,7 +175,8 @@ services:
       airflow-init:
         condition:
           service_completed_successfully
-
+    networks:
+      - crypto_network
 
 # AIRFLOW
   airflow-init:
@@ -243,6 +254,8 @@ services:
     user: "0:0"
     volumes:
       - ./docker-data/airflow:/sources
+    networks:
+      - crypto_network
 
 
 # REGISTRY
@@ -254,6 +267,8 @@ services:
       - ./docker-data/docker-registry:/var/lib/registry
     restart:
       always
+    networks:
+      - crypto_network
 
 
 # AIRFLOW STATSD EXPORTER
@@ -265,6 +280,8 @@ services:
       - 8125:8125/udp
     volumes:
       - './config/airflow-statsd-exporter:/config'
+    networks:
+      - crypto_network
 
 
 # PROMETHEUS
@@ -286,6 +303,8 @@ services:
       - './docker-data/prometheus/data:/prometheus'
     restart:
       always
+    networks:
+      - crypto_network
 
 
 # GRAFANA
@@ -304,6 +323,8 @@ services:
       - './docker-data/grafana/data:/var/lib/grafana'
     restart:
       always
+    networks:
+      - crypto_network
 
 
 # MINIO
@@ -326,6 +347,8 @@ services:
       - ./docker-data/minio/data:/data
     restart:
       always
+    networks:
+      - crypto_network
 
 
 # MLFLOW
@@ -346,7 +369,8 @@ services:
         mlflow server \
         --backend-store-uri postgresql://lazyplum:kwsxfk8332@postgres/mlflow_db \
         --default-artifact-root s3://mlflow/ \
-        --host 0.0.0.0
+        --host 0.0.0.0 \
+        --port 5000
     depends_on:
       postgres:
         condition: service_healthy
@@ -354,7 +378,14 @@ services:
         condition: service_healthy
     ports:
       - 5001:5000
-    restart: always
+    restart:
+      always
+    networks:
+      - crypto_network
+
+
+networks:
+  crypto_network:
 
 
 # compose 파일 실행
@@ -393,8 +424,7 @@ services:
   #     DB_PASSWORD: kwsxfk8332
   #     DB_NAME: crypto_currency
 
-# networks:
-#   crypto_network:
+
 
 # volumes:
 #   crypto_volume:

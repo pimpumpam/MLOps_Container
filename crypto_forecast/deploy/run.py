@@ -7,7 +7,7 @@ from src.experiment_manage import is_nested, tracking_experiment, tracking_run, 
 from utils.utils import load_spec_from_config
 
 
-mlflow.set_tracking_uri(uri="http://mlflow:8081")
+mlflow.set_tracking_uri(uri="http://mlflow-server:5000")
 
 class Deploy:
 
@@ -94,7 +94,6 @@ class Deploy:
                 stage = 'Production'
             )
 
-        print(f"🐳 컨테이너 종료")
 
 if __name__ == "__main__":
 
@@ -106,6 +105,9 @@ if __name__ == "__main__":
         cfg_meta,
         cfg_deploy
     ) = load_spec_from_config(args.config)
+    
 
+    print(f"🐳 컨테이너 실행")
     runner = Deploy(cfg_meta, cfg_deploy)
     runner.run()
+    print(f"🐳 컨테이너 종료")

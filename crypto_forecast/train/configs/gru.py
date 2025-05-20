@@ -1,6 +1,6 @@
 class CfgMeta:
     static_dir = '/app/static'
-    artifacts_dir = '/app/mlruns'
+    artifacts_dir = 's3://mlflow'
     experiment_name = 'CryptoForecast'
 
     

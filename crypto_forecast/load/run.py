@@ -107,5 +107,8 @@ if __name__ == "__main__":
         cfg_loader
     ) = load_spec_from_config(args.config)
     
+
+    print(f"🐳 컨테이너 실행")
     loader = Loader(cfg_database, cfg_loader)
     loader.run()
+    print(f"🐳 컨테이너 종료")

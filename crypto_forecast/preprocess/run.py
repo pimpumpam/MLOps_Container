@@ -3,7 +3,7 @@ import argparse
 import pandas as pd
 
 from src.query import dataframe_to_tale
-from src.database import connect_to_engine
+from src.database import create_db_engine
 from src.preprocessing import validate_missing_values, validate_missing_timestamp, validate_duplicate_values, fill_time_gaps, fill_missing_values
 from src.feature_engineering import amount_of_change_price, amount_of_change_rate
 from utils.utils import load_spec_from_config
@@ -23,7 +23,7 @@ class Preprocessor:
         self.cfg_database = cfg_database
         self.cfg_preprocessor = cfg_preprocessor
         
-        self.engine = connect_to_engine(
+        self.engine = create_db_engine(
             host=DB_HOST,
             port=DB_PORT,
             user=DB_USER,
@@ -140,5 +140,7 @@ if __name__ == "__main__":
         cfg_preprocessor
     ) = load_spec_from_config(args.config)
     
+    print(f"🐳 컨테이너 실행")
     preprocessor = Preprocessor(cfg_database, cfg_preprocessor)
     preprocessor.run()
+    print(f"🐳 컨테이너 종료")
