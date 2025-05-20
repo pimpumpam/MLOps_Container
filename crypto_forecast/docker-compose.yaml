@@ -28,13 +28,14 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    # _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-bentoml>=1.0.0a pandas pydantic xgboost tensorflow keras scikit-learn aequitas-lite mlflow}
+    # _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-bentoml>=1.0.0a pandas pydantic xgboost tensorflow keras scikit-learn aequitas-lite mlflow docker}
     _PIP_ADDITIONAL_REQUIREMENTS: ''
     AWS_ACCESS_KEY_ID: lazyplum
     AWS_SECRET_ACCESS_KEY: kwsxfk8332
     MLFLOW_S3_ENDPOINT_URL: http://minio:9000
   volumes:
-    - ./docker-data/airflow/dags:/opt/airflow/dags
+    # - ./docker-data/airflow/dags:/opt/airflow/dags
+    - ./dags:/opt/airflow/dags
     - ./docker-data/airflow/logs:/opt/airflow/logs
     - ./docker-data/airflow/config:/opt/airflow/config
     - ./docker-data/airflow/plugins:/opt/airflow/plugins
